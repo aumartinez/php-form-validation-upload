@@ -1,5 +1,5 @@
 <?php
 
-echo "A form";
+require_once ("dbkey.php");
 
 ?>
