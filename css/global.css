@@ -1,0 +1,56 @@
+/* Forms */
+
+legend {
+  font-size: 24px;
+}
+
+form p {
+  margin: 0;
+  padding: 0;
+}
+
+#errorDiv,
+.required,
+.errorMess {
+  color: red;
+}
+
+.errorMess {
+  display: none;
+}
+
+.errorMess.active {
+  display: block;
+}
+
+form input,
+form button.btn,
+form input.form-control,
+form select option {
+  font-size: 16px;
+  height: 35px;
+}
+
+.radio-lbl,
+input.radio-input {
+  display: block;
+  float: left;
+  height: 35px;
+  line-height: 35px;
+  border: none;
+  width: auto;
+  margin: 0;
+  font-size: 16px;
+  box-shadow: none;
+  margin-left: 15px;
+}
+
+.clearer,
+.radio-group {
+  clear: both;
+  float: none;
+}
+
+form button {
+  width: 100%;
+}
