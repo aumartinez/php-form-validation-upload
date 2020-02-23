@@ -14,7 +14,7 @@ class validateForm {
     session_start();
     
     if (!isset($_POST["submitForm"])) {
-      header("Location: ". HTML . DS ."form.html");
+      header("Location: ../form.php");
       exit();
     }
     
@@ -33,6 +33,13 @@ class validateForm {
     echo "loaded";
     
     $required = REQUIRED;
+    # Check required
+    foreach ($required as $value) {
+      if (!isset($_POST[$value]) || $_POST[$value] == "") {
+        $_SESSION["error"][] = $value." is required";
+      }
+    }
+    
   }
   
 }
@@ -42,12 +49,7 @@ $validate->required();
 
 
 
-//Check required
-foreach ($required as $value) {
-  if (!isset($_POST[$value]) || $_POST[$value] == "") {
-    $_SESSION["error"][] = $value." is required";
-  }
-}
+
 
 //Validate firstName and lastName
 if (!preg_match('/^[\w .]+$/', $_POST["firstName"])) {
