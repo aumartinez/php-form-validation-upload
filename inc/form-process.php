@@ -151,8 +151,7 @@ class Validateform {
       $sql = file_get_contents(SQL . DS . "createtable.sql");
     }
     else {
-      echo $sql;  
-    }    
+      echo $sql;
     
     $email = $this->sanitized["email"];
     echo $email;
