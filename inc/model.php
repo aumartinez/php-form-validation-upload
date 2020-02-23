@@ -14,9 +14,9 @@ class Model {
       $html_src .= "\n";
     }
     
-    $error = "ERROR";
+    $error_key = "ERROR";
     $error_mess = "";
-    
+            
     if (isset($_SESSION["error"]) && isset($_SESSION["submitForm"])) {
       unset($_SESSION["submitForm"]);
       
@@ -25,11 +25,11 @@ class Model {
       $error_mess .= "<br />\n";
         
         foreach ($_SESSION["error"] as $error) {
-          $error_mess .= $error."<br />\n";
+          $error_mess .= $error . "<br />\n";
         }
     }
     
-    $this->view->add_locale($error, $error_mess);    
+    $this->view->add_locale($error_key, $error_mess);    
     $html = $this->view->replace_locales($html_src);
         
     return $html;

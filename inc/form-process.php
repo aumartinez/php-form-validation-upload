@@ -6,7 +6,7 @@ require_once ("dbkey.php");
 require_once ("view.php");
 require_once ("model.php");
 
-class validateForm {  
+class Validateform {  
   protected $required;
   protected $model;  
   
@@ -33,6 +33,7 @@ class validateForm {
     echo "loaded";
     
     $required = REQUIRED;
+    
     # Check required
     foreach ($required as $value) {
       if (!isset($_POST[$value]) || $_POST[$value] == "") {
@@ -40,32 +41,31 @@ class validateForm {
       }
     }
     
+    # Validate firstName and lastName
+    if (!preg_match('/^[\w .]+$/', $_POST["firstName"])) {
+      $_SESSION["error"][] = "First name must be letter and numbers only.";
+    }
+    
+    if (!preg_match("/^[\w .]+$/", $_POST["lastName"])) {
+      $_SESSION["error"][] = "Last name must be letter and numbers only.";
+    }
+    
+    //Validate email
+    if (isset($_POST["email"]) && $_POST["email"] != "") {
+      if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+        $_SESSION["error"][] = "Email is invalid.";
+      }
+    }
+    
+    print_r($_SESSION["error"]);
+    
   }
   
 }
 
-$validate = new validateForm();
+$validate = new Validateform();
 $validate->required();
 
-
-
-
-
-//Validate firstName and lastName
-if (!preg_match('/^[\w .]+$/', $_POST["firstName"])) {
-  $_SESSION["error"][] = "First name must be letter and numbers only.";
-}
-
-if (!preg_match("/^[\w .]+$/", $_POST["lastName"])) {
-  $_SESSION["error"][] = "Last name must be letter and numbers only.";
-}
-
-//Validate email
-if (isset($_POST["email"]) && $_POST["email"] != "") {
-  if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-    $_SESSION["error"][] = "Email is invalid.";
-  }
-}
 
 //Validate password match
 if (isset($_POST["password"]) && isset($_POST["verify"])) {
@@ -118,8 +118,8 @@ if (isset($_POST["phone"]) && $_POST["phone"] != "") {
 //Final errors check
 if (count($_SESSION["error"]) > 0) {
   error_log("Error");
-  header("Location: register.php");
-  exit();
+  header("Location: ../form.php");
+  //exit();
 }
 else {
   if(registerUser($_POST)) {

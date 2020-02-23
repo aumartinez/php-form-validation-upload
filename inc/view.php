@@ -11,7 +11,7 @@ class View {
     echo $view_name;
   }
   
-  public function add_locale($key, $value) {
+  public function add_locale($key, $value) {    
     $this->locales[$key] = $value;
     
     return $this->locales;
