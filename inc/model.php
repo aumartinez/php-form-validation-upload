@@ -14,6 +14,7 @@ class Model {
       $html_src .= "\n";
     }
     
+    # If errors are returned    
     $error_key = "ERROR";
     $error_mess = "";
             
