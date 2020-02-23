@@ -1,43 +1,46 @@
 <?php
-if (!isset($_POST["submitForm"])) {
-  header("Location: ". HTML . DS ."form.html");
-  exit();
-}
 
-# Locations
-define ("DS", DIRECTORY_SEPARATOR);
-define ("ROOT", dirname(__FILE__));
-
-# TEMP folder location, can change name if desired
-define ("HTML", "html"); 
-define ("INC", "inc");
-
+require_once ("config.php");
 require_once ("functions.php");
-require_once ( INC . DS . "dbkey.php");
-require_once ( INC . DS . "view.php");
-require_once ( INC . DS . "model.php");
+require_once ("dbkey.php");
+require_once ("view.php");
+require_once ("model.php");
 
-class validateForm() {
+class validateForm {  
+  protected $required;
+  protected $model;  
+  
   public function __construct() {
     session_start();
+    
+    if (!isset($_POST["submitForm"])) {
+      header("Location: ". HTML . DS ."form.html");
+      exit();
+    }
+    
+    $_SESSION["submitForm"] = true;
+    
+    if (isset($_SESSION["error"])) {
+      unset($_SESSION["error"]);
+    }
+    
+    $_SESSION["error"] = array();
+    
+    $this->model = new Model();
+  } # End construct
+  
+  public function required() {
+    echo "loaded";
+    
+    $required = REQUIRED;
   }
+  
 }
 
-$_SESSION["submitForm"] = true;
+$validate = new validateForm();
+$validate->required();
 
-if (isset($_SESSION["error"])) {
-  unset($_SESSION["error"]);
-}
 
-$_SESSION["error"] = array();
-
-$required = array(
-              "firstName",
-              "lastName",
-              "email",
-              "password",
-              "verify"
-            );
 
 //Check required
 foreach ($required as $value) {
