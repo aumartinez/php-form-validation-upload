@@ -18,7 +18,9 @@ require_once ( INC . DS . "view.php");
 require_once ( INC . DS . "model.php");
 
 class validateForm() {
-  
+  public function __construct() {
+    session_start();
+  }
 }
 
 $_SESSION["submitForm"] = true;
