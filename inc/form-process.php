@@ -12,7 +12,9 @@ class Validateform {
   
   protected $sql;
   protected $rows = array();
-  private $conx;  
+  private $conx;
+  
+  protected $sanitized = array();
   
   public function __construct() {
     session_start();
@@ -132,10 +134,14 @@ class Validateform {
   }
   
   # Register user entry
-  public function register() {
-    $sanitized = array();
+  public function sanitize() {
+    $this->sanitized = array();
     
-    print_r($_POST);
+    foreach ($_POST as $key => $value) {
+      $this->sanitized[$key] = $this->open_link()->real_escape_string($value);
+    }
+        
+    return $this->sanitized;
     
     /* unset($_SESSION["submitForm"]);
     unset($_SESSION["error"]);
@@ -146,11 +152,13 @@ class Validateform {
   
   # Open DB link
   private function open_link() {
-    $this->conx = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+    $this->conx = new Mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
     if ($this->conx->connect_errno) {
       echo "Failed to connect to MySQL: " . $this->conx-> connect_error;
       exit();
     }
+    
+    return $this->conx;
   }
   
   # Close DB link
@@ -173,6 +181,8 @@ class Validateform {
     $this->close_link();
     array_pop($this->rows);
   }
+  
+ 
   
   
     
@@ -203,6 +213,7 @@ $validate->required();
 $validate->names();
 $validate->password_match();
 $validate->additional();
+$validate->sanitize();
 $validate->register();
 
 
