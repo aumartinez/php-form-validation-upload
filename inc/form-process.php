@@ -1,8 +1,19 @@
 <?php
-require_once("functions.php");
+# Locations
+define ("DS", DIRECTORY_SEPARATOR);
+define ("ROOT", dirname(__FILE__));
+
+# TEMP folder location, can change name if desired
+define ("HTML", "html"); 
+define ("INC", "inc");
+
+require_once ("functions.php");
+require_once ( INC . DS . "dbkey.php");
+require_once ( INC . DS . "view.php");
+require_once ( INC . DS . "model.php");
 
 if (!isset($_POST["submitForm"])) {
-  header("Location: success.php");
+  header("Location: ". HTML . DS ."success.html");
   exit();
 }
 
