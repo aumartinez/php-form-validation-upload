@@ -133,8 +133,9 @@ class Validateform {
   
   # Register user entry
   public function register() {
-    $san_post = array();
+    $sanitized = array();
     
+    print_r($_POST);
     
     /* unset($_SESSION["submitForm"]);
     unset($_SESSION["error"]);
