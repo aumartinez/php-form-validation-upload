@@ -119,7 +119,9 @@ class Validateform {
     $this->error_check();
   }  
   
-  public function   
+  public function register() {
+    
+  }
     
     # Final errors check
     /* if (count($_SESSION["error"]) > 0) {
