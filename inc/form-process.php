@@ -40,27 +40,27 @@ class Validateform {
       }
     }
     
-    $this->errorCheck();
+    $this->error_check();
   }
   
   public function names() {
     # Validate firstName and lastName
     if (!preg_match('/^[\w .]+$/', $_POST["firstName"])) {
-      $_SESSION["error"][] = "First name must be letter and numbers only.";
+      $_SESSION["error"][] = "First name must be letter and numbers only";
     }
     
     if (!preg_match("/^[\w .]+$/", $_POST["lastName"])) {
-      $_SESSION["error"][] = "Last name must be letter and numbers only.";
+      $_SESSION["error"][] = "Last name must be letter and numbers only";
     }
     
     # Validate email
     if (isset($_POST["email"]) && $_POST["email"] != "") {
       if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-        $_SESSION["error"][] = "Email is invalid.";
+        $_SESSION["error"][] = "Email is invalid";
       }
     }
     
-    $this->errorCheck();
+    $this->error_check();
   }
   
   public function password_match() {
@@ -68,15 +68,15 @@ class Validateform {
     if (isset($_POST["password"]) && isset($_POST["verify"])) {
       if ($_POST["password"] != "" && $_POST["verify"] != "") {
         if ($_POST["password"] != $_POST["verify"]) {
-          $_SESSION["error"][] = "Passwords don't match.";
+          $_SESSION["error"][] = "Passwords don't match";
         }
         else if (strlen($_POST["password"]) < 6 || strlen($_POST["verify"]) < 6) {
-          $_SESSION["error"][] = "Passwords should be more than 6 characters.";
+          $_SESSION["error"][] = "Passwords should be more than 6 characters";
         }
       }
     }
     
-    $this->errorCheck();
+    $this->error_check();
   }
   
   public function additional() {
@@ -116,9 +116,10 @@ class Validateform {
       }
     }
     
-    $this->errorCheck();
+    $this->error_check();
   }  
-    
+  
+  public function   
     
     # Final errors check
     /* if (count($_SESSION["error"]) > 0) {
@@ -139,10 +140,9 @@ class Validateform {
         exit();
       }
     } */
-    
-  }
   
-  protected function errorCheck() {
+  
+  protected function error_check() {
     if (count($_SESSION["error"]) > 0) {
       error_log("Error");
       header("Location: ../form.php");
