@@ -13,10 +13,6 @@ class Validateform extends Model {
   protected $required;
   protected $model;
   
-  protected $sql;
-  protected $rows = array();
-  private $conx;
-  
   protected $sanitized = array();
   
   public function __construct() {
@@ -150,7 +146,8 @@ class Validateform extends Model {
     $sql = "";
     
     if(file_exists(dirname(ROOT) . DS . SQL . DS . "createtable.sql")) {
-      $sql = file_get_contents(dirname(ROOT) . DS . SQL . DS . "createtable.sql");      
+      $sql = file_get_contents(dirname(ROOT) . DS . SQL . DS . "createtable.sql");
+      $this->set_multyquery($sql);
     }
     
     $email = $this->sanitized["email"];
@@ -211,49 +208,15 @@ class Validateform extends Model {
     
     unset($_SESSION["submitForm"]);
     unset($_SESSION["error"]);
-    $_SESSION["success"] = true;    
+    $_SESSION["success"] = true; 
+    $_SESSION["user"] = $this->sanitized["email"];
     $this->redirect();
   }
   
   private function redirect() {
     header("Location: ../form.php");
     exit();
-  }
-  
-  # Open DB link
-  private function open_link() {
-    $this->conx = new Mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-    if ($this->conx->connect_errno) {
-      echo "Failed to connect to MySQL: " . $this->conx-> connect_error;
-      exit();
-    }
-    
-    return $this->conx;
-  }
-  
-  # Close DB link
-  private function close_link() {
-    $this->conx->close();
-  }
-  
-  # Submit SQL query for INSERT, UPDATE or DELETE
-  protected function set_query($sql) {
-    $this->open_link();
-    $this->conx->query($sql);
-    $this->close_link();
-  }
-  
-  # Submit SELECT SQL query
-  protected function get_query($sql) {
-    $this->open_link();
-    $result = $this->conx->query($sql);
-    while ($this->rows[] = $result->fetch_assoc());
-    $result->free();
-    $this->close_link();
-    array_pop($this->rows);
-    
-    return $this->rows[0];
-  }  
+  }   
 }
 
 $validate = new Validateform();
