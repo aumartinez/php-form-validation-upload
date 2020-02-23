@@ -30,8 +30,7 @@ class Validateform {
   } # End construct
   
   public function required() {
-    echo "loaded";
-    
+        
     $required = REQUIRED;
     
     # Check required
@@ -40,6 +39,8 @@ class Validateform {
         $_SESSION["error"][] = $value." is required";
       }
     }
+    
+    $this->errorCheck();
     
     # Validate firstName and lastName
     if (!preg_match('/^[\w .]+$/', $_POST["firstName"])) {
@@ -106,7 +107,7 @@ class Validateform {
     }
     
     # Final errors check
-    if (count($_SESSION["error"]) > 0) {
+    /* if (count($_SESSION["error"]) > 0) {
       error_log("Error");
       header("Location: ../form.php");
       exit();
@@ -115,26 +116,30 @@ class Validateform {
       if(registerUser($_POST)) {
         unset($_SESSION["submitForm"]);
         unset($_SESSION["error"]);
-        $_SESSION["success"];
+        $_SESSION["success"] = true;
         header("Location: ../form.php");
         exit();    
       }
       else {    
-        error_log("Problem registering user: {$_POST["email"]}.", $_SESSION["error"][] = "Problem registering account.", die(header("Location: register.php")));
+        error_log("Problem registering user: {$_POST["email"]}.", $_SESSION["error"][] = "Problem registering account.", die(header("Location: ../form.php")));
         exit();
       }
-    }
+    } */
     
+  }
+  
+  protected function errorCheck() {
+    if (count($_SESSION["error"]) > 0) {
+      error_log("Error");
+      header("Location: ../form.php");
+      exit();
+    }
   }
   
 }
 
 $validate = new Validateform();
 $validate->required();
-
-
-
-
 
 
 
