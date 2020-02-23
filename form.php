@@ -20,7 +20,12 @@ class Form {
     $this->model = new Model();
     $this->view = new View();
     
-    $this->page = "form";
+    if (isset($_SESSION["success"])) {
+      $this->page = "success";
+    }
+    else {
+      $this->page = "form";  
+    }
     
     $this->view->render($this->model->build_page($this->page));
   }

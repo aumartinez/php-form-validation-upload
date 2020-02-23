@@ -31,7 +31,12 @@ class Model {
         }
     }
     
-    $this->view->add_locale($error_key, $error_mess);    
+    # If form is successful
+    $success_key = "SUCCESS";
+    $success_mess = "";
+    
+    $this->view->add_locale($error_key, $error_mess);
+    $this->view->add_locale($success_key, $success_mess);
     $html = $this->view->replace_locales($html_src);
         
     return $html;
