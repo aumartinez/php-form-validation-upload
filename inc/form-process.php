@@ -25,8 +25,7 @@ class Validateform extends Model {
     session_start();
     
     if (!isset($_POST["submitForm"])) {
-      header("Location: ../form.php");
-      exit();
+      $this->redirect();
     }
     
     $_SESSION["submitForm"] = true;
@@ -132,8 +131,7 @@ class Validateform extends Model {
   protected function error_check() {
     if (count($_SESSION["error"]) > 0) {
       error_log("Error");
-      header("Location: ../form.php");
-      exit();
+      $this->redirect();
     }
   }
   
@@ -162,15 +160,64 @@ class Validateform extends Model {
           WHERE email = '{$email}'";
     
     if(count($this->get_query($sql)) == 1) {
-      echo "found";
+      $_SESSION["error"][] = "A user with that e-mail address already exists";
+      $this->redirect();
     }
     
-        
-    /* unset($_SESSION["submitForm"]);
+    $firstName = $this->sanitized["firstName"];
+    $lastName = $this->sanitized["lastName"];
+    
+    $salt = "\$6\$rounds=5000\$".randomStr(8)."\$";    
+    $password = $this->sanitized["password"];
+    $crypted = substr(crypt($password, $salt), strlen($salt));
+    
+    $street = $this->sanitized["address"];
+    $city = $this->sanitized["city"];
+    $state = $this->sanitized["state"];
+    $zip = $this->sanitized["zip"];
+    $phone = $this->sanitized["phone"];
+    $phonetype = $this->sanitized["phonetype"];
+
+    $sql = "INSERT INTO customers (
+          email,
+          create_date,
+          password,
+          salt,
+          first_name,
+          last_name,
+          street,
+          city,
+          state,
+          zip,
+          phone,
+          phone_type
+          )
+          VALUES(
+          '{$email}',
+          NOW(),
+          '{$crypted}',
+          '{$salt}',
+          '{$firstName}',
+          '{$lastName}',
+          '{$street}',
+          '{$city}',
+          '{$state}',
+          '{$zip}',
+          '{$phone}',
+          '{$phonetype}'
+          )";
+    
+    $this->set_query($sql);
+    
+    unset($_SESSION["submitForm"]);
     unset($_SESSION["error"]);
-    $_SESSION["success"] = true;
+    $_SESSION["success"] = true;    
+    $this->redirect();
+  }
+  
+  private function redirect() {
     header("Location: ../form.php");
-    exit(); */
+    exit();
   }
   
   # Open DB link
@@ -206,29 +253,7 @@ class Validateform extends Model {
     array_pop($this->rows);
     
     return $this->rows[0];
-  }
-  
-    
-    # Final errors check
-    /* if (count($_SESSION["error"]) > 0) {
-      error_log("Error");
-      header("Location: ../form.php");
-      exit();
-    }
-    else {
-      if(registerUser($_POST)) {
-        unset($_SESSION["submitForm"]);
-        unset($_SESSION["error"]);
-        $_SESSION["success"] = true;
-        header("Location: ../form.php");
-        exit();    
-      }
-      else {    
-        error_log("Problem registering user: {$_POST["email"]}.", $_SESSION["error"][] = "Problem registering account.", die(header("Location: ../form.php")));
-        exit();
-      }
-    } */
-  
+  }  
 }
 
 $validate = new Validateform();
@@ -238,87 +263,5 @@ $validate->password_match();
 $validate->additional();
 $validate->sanitize();
 $validate->register();
-
-
-function registerUser($form) {
-  
-  
-  $sql = "SELECT id 
-          FROM customer
-          WHERE email = '{$email}'";
-  
-  $query = mysqli_query($conx, $sql);
-  if (!$query) {
-    error_log(die("SQL query error: ".mysqli_error($conx)));
-    return false;
-  }
-  
-  $result = mysqli_num_rows($query);
-  if ($result == 1) {
-    $_SESSION["error"][] = "A user with that e-mail address already exists.";
-    mysqli_close($conx);
-    mysqli_free_result($query);
-    return false;
-  }
-  
-  mysqli_free_result($query);
-  
-  $firstName = mysqli_real_escape_string($conx, $_POST["firstName"]);
-  $lastName = mysqli_real_escape_string($conx, $_POST["lastName"]);
-  
-  $salt = "\$6\$rounds=5000\$".randomStr(8)."\$";
-  $password = mysqli_real_escape_string($conx, $_POST["password"]);
-  $crypted = substr(crypt($password, $salt),strlen($salt));
-  
-  $street = isset($_POST["address"]) ? mysqli_real_escape_string($conx, $_POST["address"]) : "";
-  $city = isset($_POST["city"]) ? mysqli_real_escape_string($conx, $_POST["city"]) : "";
-  $state = isset($_POST["state"]) ? mysqli_real_escape_string($conx, $_POST["state"]) : "";
-  $zip = isset($_POST["zip"]) ? mysqli_real_escape_string($conx, $_POST["zip"]) : "";
-  $phone = isset($_POST["phone"]) ? mysqli_real_escape_string($conx, $_POST["phone"]) : "";
-  $phonetype = isset($_POST["phonetype"]) ? mysqli_real_escape_string($conx, $_POST["phonetype"]) : "";
-  
-  $sql = "INSERT INTO customer (
-          email,
-          create_date,
-          password,
-          salt,
-          first_name,
-          last_name,
-          street,
-          city,
-          state,
-          zip,
-          phone,
-          phone_type
-          )
-          VALUES(
-          '{$email}',
-          NOW(),
-          '{$crypted}',
-          '{$salt}',
-          '{$firstName}',
-          '{$lastName}',
-          '{$street}',
-          '{$city}',
-          '{$state}',
-          '{$zip}',
-          '{$phone}',
-          '{$phonetype}'
-          )";
-  
-  $query = mysqli_query($conx, $sql);
-  
-  if ($query) {
-    $id = mysqli_insert_id($conx);
-    error_log("New user with email:{$email} registered as ID {$id}.");
-    mysqli_close($conx);
-    return true;
-  }
-  else {
-    error_log("Couldn't add new registry, the query failed: ".mysqli_error($conx));
-    mysqli_close($conx);
-    return false;
-  }
-}//End function
 
 ?>

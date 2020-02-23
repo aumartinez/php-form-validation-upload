@@ -22,12 +22,13 @@ class Form {
     
     if (isset($_SESSION["success"])) {
       $this->page = "success";
+      unset($_SESSION["success"]);
     }
     else {
       $this->page = "form";  
     }
     
-    $this->view->render($this->model->build_page($this->page));
+    $this->view->render($this->model->build_page($this->page));    
   }
 }
 
