@@ -7,9 +7,9 @@ define ("ROOT", dirname(__FILE__));
 define ("HTML", "html"); 
 define ("INC", "inc");
 
-require_once ( INC . DS. "dbkey.php");
-require_once ( INC . DS. "view.php");
-require_once ( INC . DS. "model.php");
+require_once ( INC . DS . "dbkey.php");
+require_once ( INC . DS . "view.php");
+require_once ( INC . DS . "model.php");
 
 class Form {
   protected $model;
