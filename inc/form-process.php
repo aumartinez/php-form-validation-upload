@@ -141,8 +141,13 @@ class Validateform {
       $this->sanitized[$key] = $this->open_link()->real_escape_string($value);
     }
         
-    return $this->sanitized;
-    
+    return $this->sanitized;    
+  }
+  
+  public function register() {
+    $email = $this->sanitized["email"];
+    echo $email;
+        
     /* unset($_SESSION["submitForm"]);
     unset($_SESSION["error"]);
     $_SESSION["success"] = true;
