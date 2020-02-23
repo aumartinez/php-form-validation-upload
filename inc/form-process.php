@@ -50,14 +50,79 @@ class Validateform {
       $_SESSION["error"][] = "Last name must be letter and numbers only.";
     }
     
-    //Validate email
+    # Validate email
     if (isset($_POST["email"]) && $_POST["email"] != "") {
       if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
         $_SESSION["error"][] = "Email is invalid.";
       }
     }
     
-    print_r($_SESSION["error"]);
+    # Validate password match
+    if (isset($_POST["password"]) && isset($_POST["verify"])) {
+      if ($_POST["password"] != "" && $_POST["verify"] != "") {
+        if ($_POST["password"] != $_POST["verify"]) {
+          $_SESSION["error"][] = "Passwords don't match.";
+        }
+        else if (strlen($_POST["password"]) < 6 || strlen($_POST["verify"]) < 6) {
+          $_SESSION["error"][] = "Passwords should be more than 6 characters.";
+        }
+      }
+    }
+    
+    # Additional validations
+    if (isset($_POST["state"]) && strlen($_POST["state"]) > 0) {
+      if (!is_valid_state($_POST["state"])) {
+        $_SESSION["error"][] = "Please choose a valid state.";
+      }
+    }
+
+    if (isset($_POST["zip"]) && $_POST["zip"] != "") {
+      if (!is_valid_zip($_POST["zip"])) {
+        $_SESSION["error"][] = "ZIP code error.";
+      }
+    }
+
+    if (isset($_POST["phone"]) && $_POST["phone"] != "") {
+      if (!preg_match("/^[\d]+$/", $_POST["phone"])) {
+        $_SESSION["error"][] = "Phone number should be only digits.";
+      }
+      else if (strlen($_POST["phone"] < 10)) {
+        $_SESSION["error"][] = "Phone number must be at least 10 digits.";
+      }
+      
+      if (!isset($_POST["phonetype"]) || $_POST["phonetype"] == "") {
+        $_SESSION["error"][] = "Please choose a phone number type.";
+      }
+      else {
+        $validPhoneTypes = array(
+        "work",
+        "home"
+        );
+        
+        if (!in_array($_POST["phonetype"], $validPhoneTypes)) {
+          $_SESSION["error"][] = "Please choose a valid phone number type.";
+        }
+      }
+    }
+    
+    # Final errors check
+    if (count($_SESSION["error"]) > 0) {
+      error_log("Error");
+      header("Location: ../form.php");
+      exit();
+    }
+    else {
+      if(registerUser($_POST)) {
+        unset($_SESSION["submitForm"]);
+        unset($_SESSION["error"]);
+        header("Location: success.php");
+        exit();    
+      }
+      else {    
+        error_log("Problem registering user: {$_POST["email"]}.", $_SESSION["error"][] = "Problem registering account.", die(header("Location: register.php")));
+        exit();
+      }
+    }
     
   }
   
@@ -67,72 +132,9 @@ $validate = new Validateform();
 $validate->required();
 
 
-//Validate password match
-if (isset($_POST["password"]) && isset($_POST["verify"])) {
-  if ($_POST["password"] != "" && $_POST["verify"] != "") {
-    if ($_POST["password"] != $_POST["verify"]) {
-      $_SESSION["error"][] = "Passwords don't match.";
-    }
-    else if (strlen($_POST["password"]) < 6 || strlen($_POST["verify"]) < 6) {
-      $_SESSION["error"][] = "Passwords should be more than 6 characters.";
-    }
-  }
-}
 
-//Additional validations
-if (isset($_POST["state"]) && strlen($_POST["state"]) > 0) {
-  if (!is_valid_state($_POST["state"])) {
-    $_SESSION["error"][] = "Please choose a valid state.";
-  }
-}
 
-if (isset($_POST["zip"]) && $_POST["zip"] != "") {
-  if (!is_valid_zip($_POST["zip"])) {
-    $_SESSION["error"][] = "ZIP code error.";
-  }
-}
 
-if (isset($_POST["phone"]) && $_POST["phone"] != "") {
-  if (!preg_match("/^[\d]+$/", $_POST["phone"])) {
-    $_SESSION["error"][] = "Phone number should be only digits.";
-  }
-  else if (strlen($_POST["phone"] < 10)) {
-    $_SESSION["error"][] = "Phone number must be at least 10 digits.";
-  }
-  
-  if (!isset($_POST["phonetype"]) || $_POST["phonetype"] == "") {
-    $_SESSION["error"][] = "Please choose a phone number type.";
-  }
-  else {
-    $validPhoneTypes = array(
-    "work",
-    "home"
-    );
-    
-    if (!in_array($_POST["phonetype"], $validPhoneTypes)) {
-      $_SESSION["error"][] = "Please choose a valid phone number type.";
-    }
-  }
-}
-
-//Final errors check
-if (count($_SESSION["error"]) > 0) {
-  error_log("Error");
-  header("Location: ../form.php");
-  //exit();
-}
-else {
-  if(registerUser($_POST)) {
-    unset($_SESSION["submitForm"]);
-    unset($_SESSION["error"]);
-    header("Location: success.php");
-    exit();    
-  }
-  else {    
-    error_log("Problem registering user: {$_POST["email"]}.", $_SESSION["error"][] = "Problem registering account.", die(header("Location: register.php")));
-    exit();
-  }
-}
 
 
 function registerUser($form) {
