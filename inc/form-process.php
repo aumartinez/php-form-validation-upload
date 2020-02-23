@@ -2,7 +2,6 @@
 # Locations
 define ("DS", DIRECTORY_SEPARATOR);
 define ("ROOT", dirname(__FILE__));
-define ("INC", "inc");
 
 require_once ("config.php");
 require_once ("functions.php");
@@ -10,7 +9,7 @@ require_once ("dbkey.php");
 require_once ("view.php");
 require_once ("model.php");
 
-class Validateform {  
+class Validateform extends Model {  
   protected $required;
   protected $model;
   
@@ -21,6 +20,8 @@ class Validateform {
   protected $sanitized = array();
   
   public function __construct() {
+    parent::__construct();
+    
     session_start();
     
     if (!isset($_POST["submitForm"])) {
@@ -36,7 +37,6 @@ class Validateform {
     
     $_SESSION["error"] = array();
     
-    $this->model = new Model();
   } # End construct
   
   public function required() {
@@ -149,16 +149,19 @@ class Validateform {
   }
   
   public function register() {
-    $sql = "nothing";
+    $sql = "";
     
-    if(file_exists(SQL . DS . "createtable.sql")) {
-      $sql = file_get_contents(SQL . DS . "createtable.sql");
+    if(file_exists(dirname(ROOT) . DS . SQL . DS . "createtable.sql")) {
+      $sql = file_get_contents(dirname(ROOT) . DS . SQL . DS . "createtable.sql");      
     }
-    else {
-      echo $sql;
     
     $email = $this->sanitized["email"];
-    echo $email;
+    
+    $sql = "SELECT id 
+          FROM customers
+          WHERE email = '{$email}'";
+    
+    echo $this->get_query($sql);
     
         
     /* unset($_SESSION["submitForm"]);
@@ -193,15 +196,14 @@ class Validateform {
   
   protected function get_query($sql) {
     $this->open_link();
-    $resul = $this->conx->query($sql);
+    $result = $this->conx->query($sql);
     while ($this->rows[] = $result->fetch_assoc());
     $result->free();
     $this->close_link();
     array_pop($this->rows);
+    
+    return $this->rows;
   }
-  
- 
-  
   
     
     # Final errors check
@@ -236,14 +238,7 @@ $validate->register();
 
 
 function registerUser($form) {
-  $conx = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-  if (!$conx) {
-    $messLog = "MySQL connection failed: ".mysqli_connect_errno();
-    error_log($messLog);
-    return false;
-  }
   
-  $email = mysqli_real_escape_string($conx, $_POST["email"]);
   
   $sql = "SELECT id 
           FROM customer
