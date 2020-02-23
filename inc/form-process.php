@@ -115,7 +115,8 @@ class Validateform {
       if(registerUser($_POST)) {
         unset($_SESSION["submitForm"]);
         unset($_SESSION["error"]);
-        header("Location: success.php");
+        $_SESSION["success"];
+        header("Location: ../form.php");
         exit();    
       }
       else {    
