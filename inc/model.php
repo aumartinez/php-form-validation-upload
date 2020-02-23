@@ -1,8 +1,6 @@
 <?php
 
-class Model {
-  private $html_src;
-  private $html;
+class Model {  
   protected $view;
   
   public function __construct() {
