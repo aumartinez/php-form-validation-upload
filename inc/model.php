@@ -23,6 +23,7 @@ class Model {
       $error_mess = "\n";
       $error_mess .= "Errors found.";
       $error_mess .= "<br />\n";
+      $error_mess .= "<br />\n";
         
         foreach ($_SESSION["error"] as $error) {
           $error_mess .= $error . "<br />\n";
