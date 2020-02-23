@@ -161,7 +161,9 @@ class Validateform extends Model {
           FROM customers
           WHERE email = '{$email}'";
     
-    echo $this->get_query($sql);
+    if(count($this->get_query($sql)) == 1) {
+      echo "found";
+    }
     
         
     /* unset($_SESSION["submitForm"]);
@@ -194,6 +196,7 @@ class Validateform extends Model {
     $this->close_link();
   }
   
+  # Submit SELECT SQL query
   protected function get_query($sql) {
     $this->open_link();
     $result = $this->conx->query($sql);
@@ -202,7 +205,7 @@ class Validateform extends Model {
     $this->close_link();
     array_pop($this->rows);
     
-    return $this->rows;
+    return $this->rows[0];
   }
   
     
