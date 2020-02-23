@@ -41,7 +41,9 @@ class Validateform {
     }
     
     $this->errorCheck();
-    
+  }
+  
+  public function names() {
     # Validate firstName and lastName
     if (!preg_match('/^[\w .]+$/', $_POST["firstName"])) {
       $_SESSION["error"][] = "First name must be letter and numbers only.";
@@ -58,6 +60,10 @@ class Validateform {
       }
     }
     
+    $this->errorCheck();
+  }
+  
+  public function password_match() {
     # Validate password match
     if (isset($_POST["password"]) && isset($_POST["verify"])) {
       if ($_POST["password"] != "" && $_POST["verify"] != "") {
@@ -70,6 +76,10 @@ class Validateform {
       }
     }
     
+    $this->errorCheck();
+  }
+  
+  public function additional() {
     # Additional validations
     if (isset($_POST["state"]) && strlen($_POST["state"]) > 0) {
       if (!is_valid_state($_POST["state"])) {
@@ -106,6 +116,10 @@ class Validateform {
       }
     }
     
+    $this->errorCheck();
+  }  
+    
+    
     # Final errors check
     /* if (count($_SESSION["error"]) > 0) {
       error_log("Error");
@@ -140,7 +154,9 @@ class Validateform {
 
 $validate = new Validateform();
 $validate->required();
-
+$validate->names();
+$validate->password_match();
+$validate->additional();
 
 
 function registerUser($form) {
