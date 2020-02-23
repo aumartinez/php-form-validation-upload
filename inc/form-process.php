@@ -8,7 +8,11 @@ require_once ("model.php");
 
 class Validateform {  
   protected $required;
-  protected $model;  
+  protected $model;
+  
+  protected $sql;
+  protected $rows = array();
+  private $conx;  
   
   public function __construct() {
     session_start();
@@ -117,11 +121,59 @@ class Validateform {
     }
     
     $this->error_check();
-  }  
-  
-  public function register() {
-    
   }
+  
+  protected function error_check() {
+    if (count($_SESSION["error"]) > 0) {
+      error_log("Error");
+      header("Location: ../form.php");
+      exit();
+    }
+  }
+  
+  # Register user entry
+  public function register() {
+    $san_post = array();
+    
+    
+    /* unset($_SESSION["submitForm"]);
+    unset($_SESSION["error"]);
+    $_SESSION["success"] = true;
+    header("Location: ../form.php");
+    exit(); */
+  }
+  
+  # Open DB link
+  private function open_link() {
+    $this->conx = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+    if ($this->conx->connect_errno) {
+      echo "Failed to connect to MySQL: " . $this->conx-> connect_error;
+      exit();
+    }
+  }
+  
+  # Close DB link
+  private function close_link() {
+    $this->conx->close();
+  }
+  
+  # Submit SQL query for INSERT, UPDATE or DELETE
+  protected function set_query($sql) {
+    $this->open_link();
+    $this->conx->query($sql);
+    $this->close_link();
+  }
+  
+  protected function get_query($sql) {
+    $this->open_link();
+    $resul = $this->conx->query($sql);
+    while ($this->rows[] = $result->fetch_assoc());
+    $result->free();
+    $this->close_link();
+    array_pop($this->rows);
+  }
+  
+  
     
     # Final errors check
     /* if (count($_SESSION["error"]) > 0) {
@@ -143,15 +195,6 @@ class Validateform {
       }
     } */
   
-  
-  protected function error_check() {
-    if (count($_SESSION["error"]) > 0) {
-      error_log("Error");
-      header("Location: ../form.php");
-      exit();
-    }
-  }
-  
 }
 
 $validate = new Validateform();
@@ -159,6 +202,7 @@ $validate->required();
 $validate->names();
 $validate->password_match();
 $validate->additional();
+$validate->register();
 
 
 function registerUser($form) {
