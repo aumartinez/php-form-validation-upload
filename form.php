@@ -12,6 +12,7 @@ require_once (INC . DS . "model.php");
 class Form {
   protected $model;
   protected $view;
+  private $page;
   
   public function __construct() {
     session_start();
@@ -19,7 +20,9 @@ class Form {
     $this->model = new Model();
     $this->view = new View();
     
-    $this->view->render($this->model->build_page());
+    $this->page = "form";
+    
+    $this->view->render($this->model->build_page($page));
   }
 }
 

@@ -7,10 +7,10 @@ class Model {
     $this->view = new View();    
   }
   
-  public function build_page() {
+  public function build_page($page) {
     $html_src = "";
-    if (file_exists( HTML . DS . "form.html")) {
-      $html_src .= file_get_contents(HTML . DS . "form.html");
+    if (file_exists( HTML . DS . $page . ".html")) {
+      $html_src .= file_get_contents(HTML . DS . $page . ".html");
       $html_src .= "\n";
     }
     
