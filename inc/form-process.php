@@ -1,4 +1,9 @@
 <?php
+if (!isset($_POST["submitForm"])) {
+  header("Location: ". HTML . DS ."form.html");
+  exit();
+}
+
 # Locations
 define ("DS", DIRECTORY_SEPARATOR);
 define ("ROOT", dirname(__FILE__));
@@ -12,9 +17,8 @@ require_once ( INC . DS . "dbkey.php");
 require_once ( INC . DS . "view.php");
 require_once ( INC . DS . "model.php");
 
-if (!isset($_POST["submitForm"])) {
-  header("Location: ". HTML . DS ."success.html");
-  exit();
+class validateForm() {
+  
 }
 
 $_SESSION["submitForm"] = true;
