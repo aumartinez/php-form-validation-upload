@@ -22,7 +22,7 @@ class Form {
     
     $this->page = "form";
     
-    $this->view->render($this->model->build_page($page));
+    $this->view->render($this->model->build_page($this->page));
   }
 }
 
