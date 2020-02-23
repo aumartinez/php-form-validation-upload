@@ -145,8 +145,18 @@ class Validateform {
   }
   
   public function register() {
+    $sql = "nothing";
+    
+    if(file_exists(SQL . DS . "createtable.sql")) {
+      $sql = file_get_contents(SQL . DS . "createtable.sql");
+    }
+    else {
+      echo $sql;  
+    }    
+    
     $email = $this->sanitized["email"];
     echo $email;
+    
         
     /* unset($_SESSION["submitForm"]);
     unset($_SESSION["error"]);
