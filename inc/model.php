@@ -46,7 +46,9 @@ class Model {
           
       $result = $this->get_query($sql);
       
-      $success_mess = $result;
+      $success_mess .= "Email address: " . $result["email"] . "<br />\n";
+      $success_mess .= "First Name: " . $result["first_name"] . "<br />\n";
+      $success_mess .= "Last Name: " . $result["last_name"] . "<br />\n";
       
       unset($_SESSION["success"]);
       unset($_SESSION["user"]);
