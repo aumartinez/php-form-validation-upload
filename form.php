@@ -23,8 +23,7 @@ class Form {
     $this->view = new View();
     
     if (isset($_SESSION["success"])) {
-      $this->page = "success";
-      unset($_SESSION["success"]);
+      $this->page = "success";      
     }
     else {
       $this->page = "form";  
