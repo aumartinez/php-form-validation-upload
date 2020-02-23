@@ -1,4 +1,8 @@
 <?php
+# Locations
+define ("DS", DIRECTORY_SEPARATOR);
+define ("ROOT", dirname(__FILE__));
+define ("INC", "inc");
 
 require_once ("config.php");
 require_once ("functions.php");
