@@ -256,6 +256,7 @@ class Validateform extends Model {
     
     # if everything is ok, try to upload file
     } else {
+      
         if (move_uploaded_file($_FILES["images"]["tmp_name"], $target_file)) {
             echo "The file ". basename( $_FILES["images"]["name"]). " has been uploaded.";
         } else {
@@ -277,6 +278,6 @@ $validate->password_match();
 $validate->additional();
 $validate->sanitize();
 $validate->upload();
-//$validate->register();
+$validate->register();
 
 ?>
