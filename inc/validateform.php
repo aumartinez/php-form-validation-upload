@@ -131,7 +131,7 @@ class Validateform extends Model {
     }
   }
   
-  # Register user entry
+  # Sanitize user input
   public function sanitize() {
     $this->sanitized = array();
     
@@ -142,6 +142,7 @@ class Validateform extends Model {
     return $this->sanitized;    
   }
   
+  # Register user entry
   public function register() {
     $sql = "";
     
