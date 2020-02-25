@@ -151,12 +151,14 @@ class Validateform extends Model {
       $this->set_multyquery($sql);
     }
     
+    # Check if user already exists
     $email = $this->sanitized["email"];
     
     $sql = "SELECT id 
           FROM customers
           WHERE email = '{$email}'";
     
+    # If user exists return to landing form
     if(count($this->get_query($sql)) == 1) {
       $_SESSION["error"][] = "A user with that e-mail address already exists";
       $this->redirect();
@@ -165,10 +167,12 @@ class Validateform extends Model {
     $firstName = $this->sanitized["firstName"];
     $lastName = $this->sanitized["lastName"];
     
+    # SHA salt
     $salt = "\$6\$rounds=5000\$".randomStr(8)."\$";    
     $password = $this->sanitized["password"];
     $crypted = substr(crypt($password, $salt), strlen($salt));
     
+    # Insert all data
     $street = $this->sanitized["address"];
     $city = $this->sanitized["city"];
     $state = $this->sanitized["state"];
@@ -214,10 +218,11 @@ class Validateform extends Model {
     $this->redirect();
   }
   
+  # Upload function
   public function upload() {
     $target_dir = "../uploads/";
     $target_file = $target_dir . basename($_FILES["images"]["name"]);
-    $upload_ok = 1;
+    $upload_ok = true;
     $image_type = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
     # Check if image file is a actual image or fake image
@@ -225,34 +230,34 @@ class Validateform extends Model {
         $check = getimagesize($_FILES["images"]["tmp_name"]);
         if($check !== false) {
             echo "File is an image - " . $check["mime"] . ".";
-            $upload_ok = 1;
+            $upload_ok = true;
         } else {
             echo "File is not an image.";
-            $upload_ok = 0;
+            $upload_ok = false;
         }
     }
     
     # Check if file already exists
     if (file_exists($target_file)) {
         echo "Sorry, file already exists.";
-        $upload_ok = 0;
+        $upload_ok = false;
     }
     
     # Check file size
     if ($_FILES["images"]["size"] > 500000) {
         echo "Sorry, your file is too large.";
-        $upload_ok = 0;
+        $upload_ok = false;
     }
     
     # Allow certain file formats
     if($image_type != "jpg" && $image_type != "png" && $image_type != "jpeg"
     && $image_type != "gif" ) {
         echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        $upload_ok = 0;
+        $upload_ok = false;
     }
     
     # Check if $uploadOk is set to 0 by an error
-    if ($upload_ok == 0) {
+    if ($upload_ok == false) {
         echo "Sorry, your file was not uploaded.";
     
     # if everything is ok, try to upload file
