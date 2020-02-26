@@ -163,50 +163,51 @@ class Validateform extends Model {
     $limit = 3;
     
     if (empty(array_filter($_FILES["images"]["name"]))) {
-      # Nothing to upload
+      $this->error_check();
       return;
     }
     
     # Check for max file upload limit
-    if (count($_FILES["images"]["name"] > $limit)) {
-      $_SESSION["error"][] = "Please uploade only " . $limit . " images";
-      return;
+    if (count($_FILES["images"]["name"]) > $limit) {
+      $_SESSION["error"][] = "Please upload only " . $limit . " images";
+      $this->error_check();
     }
     
-    foreach ($_FILES["images"]["tmp_name"] as $key) {
+    foreach ($_FILES["images"]["tmp_name"] as $key => $value) {
         
       $file_tempname = $_FILES["images"]["tmp_name"][$key];
       $file_name = $_FILES["images"]["name"][$key];
       $file_size = $_FILES["images"]["size"][$key];
-      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+      $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
       
       $file_path = $target_dir . $file_name;
       
       # File type check
-      if (!in_array($file_ext, $allowed_types)) {
-        $_SESSION["error"][] = "Invalid image file type";
-        return;
+      if (!in_array(strtolower($file_ext), $allowed_types)) {
+        $_SESSION["error"][] = "Invalid image file type " . $file_ext;
+        $this->error_check();
       }
       
       # File size check
       if ($file_size > $max_size) {
         $_SESSION["error"][] = "Image is larger than 2MB";
-        return;
+        $this->error_check();
       }
       
       if (file_exists($file_path)) {
         $file_path = $target_dir . time() . $file_name;
       }
       
-      if (!move_uploaded_file($file_tempname, $file_path)) {
-        $_SESSION["error"][] = "Error uploading " . $file_name;
+      if (move_uploaded_file($file_tempname, $file_path)) {
+        array_push($this->imgs, $file_name);        
       }
       else {
-        array_push($this->imgs, $file_name);          
+        $_SESSION["error"][] = "Error uploading " . $file_name;
       }
       
     }
     
+    $this->error_check();
     return $this->imgs;
   }
     

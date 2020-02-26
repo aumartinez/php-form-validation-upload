@@ -49,6 +49,7 @@ class Model {
       $success_mess .= "Email address: " . $result["email"] . "<br />\n";
       $success_mess .= "First Name: " . $result["first_name"] . "<br />\n";
       $success_mess .= "Last Name: " . $result["last_name"] . "<br />\n";
+      $success_mess .= "Uploaded images: " . $result["images"] . "<br />\n";
       
       unset($_SESSION["success"]);
       unset($_SESSION["user"]);
@@ -65,7 +66,7 @@ class Model {
   protected function open_link() {
     $this->conx = new Mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
     if ($this->conx->connect_errno) {
-      echo "Failed to connect to MySQL: " . $this->conx-> connect_error;
+      echo "Failed to connect to MySQL: " . $this->conx->connect_error;
       exit();
     }
     
