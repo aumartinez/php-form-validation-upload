@@ -220,55 +220,53 @@ class Validateform extends Model {
   
   # Upload function
   public function upload() {
-    $target_dir = ".." . DS . "uploads" . DS;
-    $target_file = $target_dir . basename($_FILES["images"]["name"]);
-    $upload_ok = true;
-    $image_type = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
-    # Check if image file is a actual image or fake image
-    if(isset($_POST["submit"])) {
-      $check = getimagesize($_FILES["images"]["tmp_name"]);
-      if($check !== false) {            
-          $upload_ok = true;
-      } else {
-          $_SESSION["error"][] = "File is not an image.";
-          $upload_ok = false;
+    # target dir and file type
+    $target_dir = dirname(dirname(__FILE__)) . DS . "uploads" . DS;
+    $allowed_types = array("jpg", "png", "jpeg", "gif");
+    
+    # 2MB file size limit
+    $max_size = 2 * 1024 * 1024;
+    
+    if (!empty(array_filter($_FILES["images"]["name"]))) {
+      
+      foreach ($_FILES["images"]["tmp_name"] as $key) {
+        
+        $file_tempname = $_FILES["images"]["tmp_name"][$key];
+        $file_name = $_FILES["images"]["name"][$key];
+        $file_size = $_FILES["images"]["size"][$key];
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        
+        $file_path = $target_dir . $file_name;
+        
+        # File type check
+        if (!in_array($file_ext, $allowed_types)) {
+          $_SESSION["error"][] = "Invalid image file type";
+          return false;
+        }
+        
+        # File size check
+        if ($file_size > $max_size) {
+          $_SESSION["error"][] = "Image is larger than 2MB";
+          return false;
+        }
+        
+        if (file_exists($file_path) {
+          $file_path = $target_dir . time() . $file_name;
+        }
+        
+        if (!move_uploaded_file($file_tempname, $file_path)) {
+          $_SESSION["error"][] = "Error uploading " . $file_name;
+        }
+        
       }
     }
-    /* 
-    # Check if file already exists
-    if (file_exists($target_file)) {
-        echo "Sorry, file already exists.";
-        $upload_ok = false;
+    else {
+      # No images selected or uploaded
     }
+  }
     
-    # Check file size
-    if ($_FILES["images"]["size"] > 500000) {
-        echo "Sorry, your file is too large.";
-        $upload_ok = false;
-    }
     
-    # Allow certain file formats
-    if($image_type != "jpg" && $image_type != "png" && $image_type != "jpeg"
-    && $image_type != "gif" ) {
-        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        $upload_ok = false;
-    }
-    
-    # Check if $uploadOk is set to 0 by an error
-    if ($upload_ok == false) {
-        echo "Sorry, your file was not uploaded.";
-    
-    # if everything is ok, try to upload file
-    } else {
-      
-        if (move_uploaded_file($_FILES["images"]["tmp_name"], $target_file)) {
-            echo "The file ". basename( $_FILES["images"]["name"]). " has been uploaded.";
-        } else {
-            echo "Sorry, there was an error uploading your file.";
-        }
-    }
-  } */
   
   private function redirect() {
     header("Location: ../form.php");
