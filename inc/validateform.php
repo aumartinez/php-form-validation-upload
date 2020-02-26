@@ -131,7 +131,7 @@ class Validateform extends Model {
   
   protected function error_check() {
     if (count($_SESSION["error"]) > 0) {
-      error_log("Error");
+      error_log("Error validating form");
       $this->redirect();
     }
   }
@@ -188,7 +188,7 @@ class Validateform extends Model {
       
       # File type check
       if (!in_array($file_ext, $allowed_types)) {
-        $_SESSION["error"][] = "Invalid image file type " . $file_ext;
+        $_SESSION["error"][] = "Invalid image file type: ." . $file_ext;
         $this->error_check();
       }
       
