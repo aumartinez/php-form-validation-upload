@@ -11,8 +11,7 @@ require_once (INC . DS . "model.php");
 
 class Form {
   protected $model;
-  protected $view;
-  protected $form_model;
+  protected $view;  
   
   private $page;
   
