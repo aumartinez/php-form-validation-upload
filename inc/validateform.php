@@ -14,6 +14,7 @@ class Validateform extends Model {
   protected $model;
   
   protected $sanitized = array();
+  protected $imgs = array();
   
   public function __construct() {
     parent::__construct();
@@ -142,6 +143,68 @@ class Validateform extends Model {
     return $this->sanitized;    
   }
   
+  # Upload function
+  public function upload() {
+    
+    # target dir and file type
+    $target_dir = dirname(dirname(__FILE__)) . DS . "uploads" . DS;
+    $allowed_types = array("jpg", "png", "jpeg", "gif");
+    $this->imgs = array();
+    
+    # 2MB file size limit
+    $max_size = 2 * 1024 * 1024;
+    
+    # Multiple images upload limit
+    $limit = 3;
+    
+    if (empty(array_filter($_FILES["images"]["name"]))) {
+      # Nothing to upload
+      return false;
+    }
+    
+    # Check for max file upload limit
+    if (count($_FILES["images"]["name"] > $limit)) {
+      $_SESSION["error"][] = "Please uploade only " . $limit . " images";
+      return false;
+    }
+    
+    foreach ($_FILES["images"]["tmp_name"] as $key) {
+        
+      $file_tempname = $_FILES["images"]["tmp_name"][$key];
+      $file_name = $_FILES["images"]["name"][$key];
+      $file_size = $_FILES["images"]["size"][$key];
+      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+      
+      $file_path = $target_dir . $file_name;
+      
+      # File type check
+      if (!in_array($file_ext, $allowed_types)) {
+        $_SESSION["error"][] = "Invalid image file type";
+        return false;
+      }
+      
+      # File size check
+      if ($file_size > $max_size) {
+        $_SESSION["error"][] = "Image is larger than 2MB";
+        return false;
+      }
+      
+      if (file_exists($file_path)) {
+        $file_path = $target_dir . time() . $file_name;
+      }
+      
+      if (!move_uploaded_file($file_tempname, $file_path)) {
+        $_SESSION["error"][] = "Error uploading " . $file_name;
+      }
+      else {
+        array_push($this->imgs, $file_name);          
+      }
+      
+    }
+    
+    return $this->imgs;
+  }
+    
   # Register user entry
   public function register() {
     $sql = "";
@@ -172,6 +235,9 @@ class Validateform extends Model {
     $password = $this->sanitized["password"];
     $crypted = substr(crypt($password, $salt), strlen($salt));
     
+    # Insert images names
+    $imgs = implode(",", $this->imgs);
+    
     # Insert all data
     $street = $this->sanitized["address"];
     $city = $this->sanitized["city"];
@@ -187,6 +253,7 @@ class Validateform extends Model {
           salt,
           first_name,
           last_name,
+          images,
           street,
           city,
           state,
@@ -217,56 +284,6 @@ class Validateform extends Model {
     $_SESSION["user"] = $this->sanitized["email"];
     $this->redirect();
   }
-  
-  # Upload function
-  public function upload() {
-    
-    # target dir and file type
-    $target_dir = dirname(dirname(__FILE__)) . DS . "uploads" . DS;
-    $allowed_types = array("jpg", "png", "jpeg", "gif");
-    
-    # 2MB file size limit
-    $max_size = 2 * 1024 * 1024;
-    
-    if (!empty(array_filter($_FILES["images"]["name"]))) {
-      
-      foreach ($_FILES["images"]["tmp_name"] as $key) {
-        
-        $file_tempname = $_FILES["images"]["tmp_name"][$key];
-        $file_name = $_FILES["images"]["name"][$key];
-        $file_size = $_FILES["images"]["size"][$key];
-        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        
-        $file_path = $target_dir . $file_name;
-        
-        # File type check
-        if (!in_array($file_ext, $allowed_types)) {
-          $_SESSION["error"][] = "Invalid image file type";
-          return false;
-        }
-        
-        # File size check
-        if ($file_size > $max_size) {
-          $_SESSION["error"][] = "Image is larger than 2MB";
-          return false;
-        }
-        
-        if (file_exists($file_path) {
-          $file_path = $target_dir . time() . $file_name;
-        }
-        
-        if (!move_uploaded_file($file_tempname, $file_path)) {
-          $_SESSION["error"][] = "Error uploading " . $file_name;
-        }
-        
-      }
-    }
-    else {
-      # No images selected or uploaded
-    }
-  }
-    
-    
   
   private function redirect() {
     header("Location: ../form.php");
