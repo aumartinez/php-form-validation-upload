@@ -18,7 +18,7 @@ function is_valid_state($state) {
   else {
     return false;
   }
-}
+}//End function
 
 function is_valid_zip($zip) {
   if(preg_match("/^[\d]+$/", $zip)) {
@@ -30,9 +30,9 @@ function is_valid_zip($zip) {
   else {
     return false;
   }
-}
+}//End function
 
-function randomStr($length) {  
+function random_str($length) {  
   return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
 }
 
