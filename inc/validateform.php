@@ -59,6 +59,10 @@ class Validateform extends Model {
       $_SESSION["error"][] = "Last name must be letter and numbers only";
     }
     
+    $this->error_check();
+  }
+  
+  public function email() {
     # Validate email
     if (isset($_POST["email"]) && $_POST["email"] != "") {
       if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
@@ -301,6 +305,7 @@ class Validateform extends Model {
 $validate = new Validateform();
 $validate->required();
 $validate->names();
+$validate->email();
 $validate->password_match();
 $validate->additional();
 $validate->sanitize();
