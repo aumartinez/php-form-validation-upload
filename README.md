@@ -58,8 +58,8 @@ Check the screenshots for the UI experience
 
 **Successfull registration with images upload message**
 
-![Screenshot](/screenshots/screenshot-08.PNG)
+![Screenshot](/screenshots/screenshot-09.PNG)
 
 **Upload folder with newly uploaded images**
 
-![Screenshot](/screenshots/screenshot-09.PNG)
+![Screenshot](/screenshots/screenshot-10.PNG)
