@@ -220,23 +220,22 @@ class Validateform extends Model {
   
   # Upload function
   public function upload() {
-    $target_dir = "../uploads/";
+    $target_dir = ".." . DS . "uploads" . DS;
     $target_file = $target_dir . basename($_FILES["images"]["name"]);
     $upload_ok = true;
     $image_type = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
     # Check if image file is a actual image or fake image
     if(isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["images"]["tmp_name"]);
-        if($check !== false) {
-            echo "File is an image - " . $check["mime"] . ".";
-            $upload_ok = true;
-        } else {
-            echo "File is not an image.";
-            $upload_ok = false;
-        }
+      $check = getimagesize($_FILES["images"]["tmp_name"]);
+      if($check !== false) {            
+          $upload_ok = true;
+      } else {
+          $_SESSION["error"][] = "File is not an image.";
+          $upload_ok = false;
+      }
     }
-    
+    /* 
     # Check if file already exists
     if (file_exists($target_file)) {
         echo "Sorry, file already exists.";
@@ -269,7 +268,7 @@ class Validateform extends Model {
             echo "Sorry, there was an error uploading your file.";
         }
     }
-  }
+  } */
   
   private function redirect() {
     header("Location: ../form.php");
