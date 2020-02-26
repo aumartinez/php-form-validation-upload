@@ -20,35 +20,46 @@ Additional asked requirement was to enable an upload images functionality and to
 
 Check the screenshots for the UI experience
 
-*Empty form*
+**Empty form**
+
 ![Screenshot](/screenshots/screenshot-00.PNG)
 
-*Required fields validation with JQuery*
+**Required fields validation with JQuery**
+
 ![Screenshot](/screenshots/screenshot-01.PNG)
 
-*Another required fields validation with JQuery*
+**Another required fields validation with JQuery**
+
 ![Screenshot](/screenshots/screenshot-02.PNG)
 
-*Password match validation with JQuery*
+**Password match validation with JQuery**
+
 ![Screenshot](/screenshots/screenshot-03.PNG)
 
-*Loader animation when submitting the Form*
+**Loader animation when submitting the Form**
+
 ![Screenshot](/screenshots/screenshot-04.PNG)
 
-*Successfull registration*
+**Successfull registration**
+
 ![Screenshot](/screenshots/screenshot-05.PNG)
 
-*Already registered user validation (PHP)*
+**Already registered user validation (PHP)**
+
 ![Screenshot](/screenshots/screenshot-06.PNG)
 
-*Required fields validation with PHP, if JS is disabled*
+**Required fields validation with PHP, if JS is disabled**
+
 ![Screenshot](/screenshots/screenshot-07.PNG)
 
-*Validating max images upload with PHP*
+**Validating max images upload with PHP**
+
 ![Screenshot](/screenshots/screenshot-08.PNG)
 
-*Successfull registration with images upload message*
+**Successfull registration with images upload message**
+
 ![Screenshot](/screenshots/screenshot-08.PNG)
 
-*Upload folder with newly uploaded images*
+**Upload folder with newly uploaded images**
+
 ![Screenshot](/screenshots/screenshot-09.PNG)
