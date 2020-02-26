@@ -96,7 +96,7 @@ $(document).ready(function(){
     for (let i = 0, len = errors.length; i < len; i++) {
       $("#" + errors[i] + " ~ .errorMess").addClass("active");
     }      
-    $("#errorDiv").html("Errors found");
+    $("#errorDiv").html("Errors found!");
   }
     
   function removeErrors() {
