@@ -9,7 +9,7 @@ This sample was saw on a job add at UpWork.com, so if you got the skills to code
 
 The form should validate on the FrontEnd (with JS of course) and in the BackEnd (PHP) what the required and valid field inputs are. 
 
-1- The first test would be to check if the *required* fields were filled.
+1- The first test would be to check if the **required** fields were filled.
 
 2- Then check if the input is valid, example valid email address, password length and match, etc.
 
