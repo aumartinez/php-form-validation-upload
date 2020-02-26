@@ -3,7 +3,7 @@ A sample for a PHP form validation using PHP and adding file upload functionalit
 
 ## PHP Form validation
 
-This samples was saw on a job add at UpWork.com, so if you got the skills to code it you may end up doing a few bucks for this.
+This sample was saw on a job add at UpWork.com, so if you got the skills to code it you may end up doing a few bucks for this.
 
 ## The requirements
 
