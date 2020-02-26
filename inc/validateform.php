@@ -241,7 +241,7 @@ class Validateform extends Model {
     $lastName = $this->sanitized["lastName"];
     
     # SHA-512 salt
-    $salt = "\$6\$rounds=5000\$".randomStr(8)."\$";    
+    $salt = "\$6\$rounds=5000\$".random_str(8)."\$";    
     $password = $this->sanitized["password"];
     $crypted = substr(crypt($password, $salt), strlen($salt));
     
