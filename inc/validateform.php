@@ -236,7 +236,7 @@ class Validateform extends Model {
     $crypted = substr(crypt($password, $salt), strlen($salt));
     
     # Insert images names
-    $imgs = implode(",", $this->imgs);
+    $images = implode(",", $this->imgs);
     
     # Insert all data
     $street = $this->sanitized["address"];
@@ -268,6 +268,7 @@ class Validateform extends Model {
           '{$salt}',
           '{$firstName}',
           '{$lastName}',
+          '{$images}',
           '{$street}',
           '{$city}',
           '{$state}',
