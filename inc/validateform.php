@@ -146,6 +146,11 @@ class Validateform extends Model {
   # Upload function
   public function upload() {
     
+    if(!isset($_POST["submitForm"])) {
+      $_SESSION["error"][] = "nothing";
+      return;
+    }
+    
     # target dir and file type
     $target_dir = dirname(dirname(__FILE__)) . DS . "uploads" . DS;
     $allowed_types = array("jpg", "png", "jpeg", "gif");
@@ -159,13 +164,13 @@ class Validateform extends Model {
     
     if (empty(array_filter($_FILES["images"]["name"]))) {
       # Nothing to upload
-      return false;
+      return;
     }
     
     # Check for max file upload limit
     if (count($_FILES["images"]["name"] > $limit)) {
       $_SESSION["error"][] = "Please uploade only " . $limit . " images";
-      return false;
+      return;
     }
     
     foreach ($_FILES["images"]["tmp_name"] as $key) {
@@ -180,13 +185,13 @@ class Validateform extends Model {
       # File type check
       if (!in_array($file_ext, $allowed_types)) {
         $_SESSION["error"][] = "Invalid image file type";
-        return false;
+        return;
       }
       
       # File size check
       if ($file_size > $max_size) {
         $_SESSION["error"][] = "Image is larger than 2MB";
-        return false;
+        return;
       }
       
       if (file_exists($file_path)) {
