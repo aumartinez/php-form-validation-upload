@@ -178,12 +178,12 @@ class Validateform extends Model {
       $file_tempname = $_FILES["images"]["tmp_name"][$key];
       $file_name = $_FILES["images"]["name"][$key];
       $file_size = $_FILES["images"]["size"][$key];
-      $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+      $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
       
       $file_path = $target_dir . $file_name;
       
       # File type check
-      if (!in_array(strtolower($file_ext), $allowed_types)) {
+      if (!in_array($file_ext, $allowed_types)) {
         $_SESSION["error"][] = "Invalid image file type " . $file_ext;
         $this->error_check();
       }
