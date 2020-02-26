@@ -3,16 +3,18 @@ $(document).ready(function(){
   //To Do
   
   $("#theForm").submit(function(evt){
+    $(".loader").addClass("active");
     let errors = validateForm();
     
     if (errors.length == 0) {      
       return true;
     }
     else {
-      removeErrors();
+      removeErrors();      
       displayErrors(errors);
       evt.preventDefault();
       window.scrollTo(0,0);
+      $(".loader").removeClass("active");
       return false;
     }
   });
